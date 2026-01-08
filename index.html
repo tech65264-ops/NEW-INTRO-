@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shamil | Matrix Intro</title>
+
+  <!-- Wild West style font -->
+  <link href="https://fonts.cdnfonts.com/css/wild-west" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Wild West', system-ui, sans-serif;
+    }
+
+    /* Canvas for Matrix effect */
+    #matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      display: block;
+    }
+
+    /* Intro container (appears after 1.5s) */
+    .intro {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 1.5s;
+    }
+
+    .intro h1 {
+      font-size: 3.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .intro h2 {
+      font-size: 1.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .intro p {
+      font-size: 1rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    /* Subtle white glow on text */
+    .intro * {
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Small responsive tweaks */
+    @media (max-width: 600px) {
+      .intro h1 {
+        font-size: 2.2rem;
+        letter-spacing: 0.12em;
+      }
+      .intro h2 {
+        font-size: 1.1rem;
+        letter-spacing: 0.18em;
+      }
+      .intro p {
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <section class="intro">
+    <h2>introducing</h2>
+    <h1>Shamil</h1>
+    <p> Age 17 · Kashmir</p>
+  </section>
+
+  <script>
+    // MATRIX RAIN EFFECT (white instead of green)
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Characters set for Matrix effect
+    const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@';
+    const fontSize = 18;
+    const columns = Math.floor(canvas.width / fontSize);
+
+    const drops = [];
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+
+    function draw() {
+      // Transparent black background for trailing effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#ffffff'; // white matrix effect
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.96) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
